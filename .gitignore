@@ -1,0 +1,30 @@
+# CMake-generated files
+build/
+cmake-build-*/
+
+# Compiled object files
+*.o
+*.obj
+
+# Compiled libraries
+*.a
+*.lib
+
+# Compiled executables
+*.exe
+*.out
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# CLion-generated files
+.cmake/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# User-specific files
+*.swp
+*~
