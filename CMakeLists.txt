@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+set(CMAKE_CXX_STANDARD 14)
+
 # Set default compile flags for GCC
 set(CMAKE_C_FLAGS "-Wall -Wextra -Wconversion -Wsign-conversion -pedantic")
 add_compile_options(-Wformat -Wshadow -Wpointer-arith -Wcast-align -Wstrict-overflow -Wparentheses -Wunreachable-code -Winline -Wswitch-enum -Wlogical-op -Wnull-dereference -Wformat-nonliteral -Wvla -Wdouble-promotion)
@@ -19,11 +21,18 @@ elseif (CMAKE_BUILD_TYPE MATCHES Release)
     add_compile_options(-O3 -Werror)
 endif ()
 
-option(ENABLE_ASAN "Enable asan" OFF)
+# Add the GTest library
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+FetchContent_MakeAvailable(googletest)
 
 # Enable sanitizers
 # Requires: libasan, libubsan, liblsan, libtsan
 # Windows users: try to install the LLVM toolchain or use WSL
+option(ENABLE_ASAN "Enable asan" OFF)
 if (ENABLE_ASAN AND CMAKE_C_COMPILER_ID MATCHES "GNU|Clang" AND CMAKE_BUILD_TYPE MATCHES Debug)
     # Check if the required sanitizing libraries are present
     set(SAN_OPT "-fsanitize=address,leak,undefined,pointer-compare,pointer-subtract,alignment,signed-integer-overflow,shift,integer-divide-by-zero,null")
@@ -50,3 +59,10 @@ file(GLOB_RECURSE HEADER_FILES
 
 # Add the executable(s)
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
+
+# Configure Google Test
+enable_testing()
+add_executable(test_engine test/engine.cpp)
+target_link_libraries(test_engine GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(test_engine)
