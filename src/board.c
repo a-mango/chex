@@ -11,7 +11,7 @@
 #include "util.h"
 
 static const char* start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-static const wchar_t *pieces = L" ♟♞♝♜♛♚♙♘♗♖♕♔";
+static const wchar_t *pieces = L".♟♞♝♜♛♚♙♘♗♖♕♔";
 static const wchar_t *files = L"abcdefgh";
 static const wchar_t *ranks = L"12345678";
 
@@ -33,18 +33,18 @@ void cx_board_free(cx_board_t *board) {
 }
 
 ssize_t cx_board_print(cx_board_t const *board) {
-    cx_log("Printing board", CX_LOG_INFO);
+    cx_log("Board:", CX_LOG_INFO);
 
     // Print the header
     wprintf(L"  ");
     for (int i = 0; i < 8; i++) {
-        wprintf(L" %lc ", files[i]);
+        wprintf(L" %"CX_PRIwPIECE" ", files[i]);
     }
     wprintf(L"\n");
 
     // Print the board
     for (int rank = 7; rank >= 0; rank--) {
-        wprintf(L"%lc  ", ranks[rank]);
+        wprintf(L"%"CX_PRIwPIECE"  ", ranks[rank]);
         for (int file = 0; file < 8; file++) {
             int index = rank * 8 + file;
             cx_piece_t piece = 0;
@@ -75,10 +75,16 @@ ssize_t cx_board_print(cx_board_t const *board) {
             } else {
                 piece = CX_EMPTY;
             };
-            wprintf(L"%lc  ", pieces[piece]);
+            wprintf(L"%"CX_PRIwPIECE"  ", pieces[piece]);
         }
-        wprintf(L"%lc\n", ranks[rank]);
+        wprintf(L"%"CX_PRIwPIECE"\n", ranks[rank]);
     }
+
+    wprintf(L"  ");
+    for (int i = 0; i < 8; i++) {
+        wprintf(L" %"CX_PRIwPIECE" ", files[i]);
+    }
+    wprintf(L"\n");
 
     return 0;
 }

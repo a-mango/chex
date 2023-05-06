@@ -11,7 +11,7 @@
 #define CX_BOARD_SIZE 8
 #define CX_BOARD_WIDTH 8
 #define CX_BOARD_SQUARE_CNT 120
-#define CX_PRIuPIECE "lu"
+#define CX_PRIuPIECE "lc"
 #define CX_PRIwPIECE "lc"
 #define CX_BIT 1ULL
 
@@ -50,11 +50,9 @@ enum {
     CX_BLACK_KING,
 };
 
-#define CX_PIECE_TYPE(piece) (piece & 0b111)
-#define CX_PIECE_COLOR(piece) (piece & 0b11000)
-
-#define CX_PIECE_IS_WHITE(piece) (piece & CX_WHITE)
-#define CX_PIECE_IS_BLACK(piece) (piece & CX_BLACK)
+#define CX_WHITE_PIECES (CX_WHITE_PAWN | CX_WHITE_KNIGHT | CX_WHITE_BISHOP | CX_WHITE_ROOK | CX_WHITE_QUEEN | CX_WHITE_KING)
+#define CX_BLACK_PIECES (CX_BLACK_PAWN | CX_BLACK_KNIGHT | CX_BLACK_BISHOP | CX_BLACK_ROOK | CX_BLACK_QUEEN | CX_BLACK_KING)
+#define CX_ALL_PIECES (CX_WHITE_PIECES | CX_BLACK_PIECES)
 
 cx_board_t *cx_board_init(void);
 void cx_board_free(cx_board_t *board);
