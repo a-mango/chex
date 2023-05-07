@@ -114,14 +114,14 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     return 0;
 }
 
-ssize_t cx_board_fen(cx_board_t const *board, char *fen) {
+char* cx_board_fen(cx_board_t const *board) {
     cx_log("Board FEN", CX_LOG_INFO);
     // Export the board into a FEN string.
     assert(board != NULL);
-    assert(fen != NULL);
 
     // Dump the piece placement section of the FEN string.
-    char *c = fen;
+    char *c = calloc(120, sizeof(char));
+    char *p = c;
     for (int rank = 7; rank >= 0; rank--) {
         int empty_squares = 0;
         for (int file = 0; file < 8; file++) {
@@ -164,6 +164,9 @@ ssize_t cx_board_fen(cx_board_t const *board, char *fen) {
         *c++ = '-';
     else
         sprintf(c, "%d", board->en_passant);
+    *c++ = ' ';
+    // Dump the halfmove and fullmove section of the FEN string.
+    sprintf(c, "%d %d", board->halfmove_clock, board->fullmove_number);
 
-    return 0;
+    return p;
 }
