@@ -98,7 +98,7 @@ cx_board_t *cx_board_init(void);
 void        cx_board_free(cx_board_t *board);
 cx_piece_t  cx_board_get_piece(cx_board_t const *board, uint8_t square);
 ssize_t     cx_board_fen_load(cx_board_t *board, char const *fen);
-ssize_t     cx_board_fen(cx_board_t const *board, char *fen);
+char*       cx_board_fen(cx_board_t const *board);
 
 
 #endif  // CHEX_BOARD_H
