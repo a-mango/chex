@@ -11,14 +11,18 @@
 #define CX_BOARD_SIZE 8
 #define CX_BOARD_WIDTH 8
 #define CX_BOARD_SQUARE_CNT 120
-#define CX_PRIuPIECE "lc"
-#define CX_PRIwPIECE "lc"
+
+#define CX_PRIWSTR "ls"
+#define CX_PRIWCHAR "lc"
+
 #define CX_BIT 1ULL
 
 typedef uint64_t cx_piece_t;
 typedef uint64_t cx_bitboard_t;
 
 typedef struct {
+
+
     cx_bitboard_t white_pawns;
     cx_bitboard_t white_knights;
     cx_bitboard_t white_bishops;
