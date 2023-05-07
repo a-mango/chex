@@ -1,15 +1,17 @@
 //
 // Created by acm on 5/6/23.
 //
+#include "board.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "board.h"
 #include "util.h"
 
-static const char    *START_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+static const char *FEN_PIECES = " pnbrqkPNBRQK";
+static const char *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 cx_board_t *cx_board_init(void) {
     cx_board_t *board = calloc(1, sizeof(cx_board_t));
@@ -28,82 +30,87 @@ void cx_board_free(cx_board_t *board) {
     free(board);
 }
 
+cx_piece_t cx_board_get_piece(cx_board_t const *board, uint8_t square) {
+    assert(board != NULL);
+    assert(square < 64);
+
+    cx_bitboard_t mask = CX_BIT << square;
+    // Iterate through the bitboards and find the piece.
+    for (size_t i = 1; i < 13; i++) {
+        if (board->pieces[i] & mask) {
+            if (i < 7)
+                return (cx_piece_t)(CX_WHITE | i);
+            else
+                return (cx_piece_t)(CX_BLACK | (i - 6));
+        }
+    }
+    return CX_EMPTY;
+}
+
 ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
+    // TODO: validate FEN string and treat errors appropriately.
     assert(board != NULL);
     assert(fen != NULL);
 
     cx_log("Loading FEN", CX_LOG_INFO);
-    // Read the FEN string into our bitboards
 
     // Split the FEN string into its component parts
-    char fen_copy[strlen(fen) + 1];
+    char fen_copy[strlen(fen) + 1]; // FIXME: use malloc or fixed size buffer
     strcpy(fen_copy, fen);
-    char *parts[6];
-    char *token = strtok(fen_copy, " ");
-    int i = 0;
+    char *parts[6] = {0};
+    char *token    = strtok(fen_copy, " ");
+    int   i        = 0;
     while (token != NULL && i < 6) {
         parts[i++] = token;
-        token = strtok(NULL, " ");
+        token      = strtok(NULL, " ");
     }
 
     // Parse the piece placement section of the FEN string
     char *piece_placement = parts[0];
-    int rank = 7;
-    int file = 0;
+    int   rank            = 7;
+    int   file            = 0;
     for (const char *c = piece_placement; *c != '\0'; c++) {
         if (*c == '/') {
             // Move to the next rank
-            rank--;
+            --rank;
             file = 0;
         } else if (*c >= '1' && *c <= '8') {
             // Skip empty squares
             file += *c - '0';
         } else {
             // Place the piece on the board
-            int index = rank * 8 + file;
-            cx_bitboard_t *bitboard;
-            switch (*c) {
-                case 'P':
-                    bitboard = &board->white_pawns;
-                    break;
-                case 'p':
-                    bitboard = &board->black_pawns;
-                    break;
-                case 'N':
-                    bitboard = &board->white_knights;
-                    break;
-                case 'n':
-                    bitboard = &board->black_knights;
-                    break;
-                case 'B':
-                    bitboard = &board->white_bishops;
-                    break;
-                case 'b':
-                    bitboard = &board->black_bishops;
-                    break;
-                case 'R':
-                    bitboard = &board->white_rooks;
-                    break;
-                case 'r':
-                    bitboard = &board->black_rooks;
-                    break;
-                case 'Q':
-                    bitboard = &board->white_queens;
-                    break;
-                case 'q':
-                    bitboard = &board->black_queens;
-                    break;
-                case 'K':
-                    bitboard = &board->white_king;
-                    break;
-                case 'k':
-                    bitboard = &board->black_king;
-                    break;
-            }
-            *bitboard |= CX_BIT << index;
-            file++;
+            int    index       = rank * 8 + file;
+            size_t board_index = (size_t)(strchr(FEN_PIECES, *c) - FEN_PIECES);
+            board->pieces[board_index] |= CX_BIT << index;
+            ++file;
         }
     }
+
+    // Update the aggregate bitboards.
+    board->pieces[CX_BB_EMPTY] = CX_EMPTY_SQUARES(board);
+    board->pieces[CX_BB_WHITE] = CX_WHITE_PIECES(board);
+    board->pieces[CX_BB_BLACK] = CX_BLACK_PIECES(board);
+    board->pieces[CX_BB_ALL]   = CX_ALL_PIECES(board);
+
+    // Parse the active color section of the FEN string.
+    board->active_color = (parts[1][0] == 'w') ? CX_WHITE : CX_BLACK;
+    // Parse the castling availability section of the FEN string.
+    board->castle_rights = 0;
+    if (strchr(parts[2], 'K') != NULL)
+        board->castle_rights |= CX_CASTLE_WHITE_KINGSIDE;
+    if (strchr(parts[2], 'Q') != NULL)
+        board->castle_rights |= CX_CASTLE_WHITE_QUEENSIDE;
+    if (strchr(parts[2], 'k') != NULL)
+        board->castle_rights |= CX_CASTLE_BLACK_KINGSIDE;
+    if (strchr(parts[2], 'q') != NULL)
+        board->castle_rights |= CX_CASTLE_BLACK_QUEENSIDE;
+    // Parse the en passant target square section of the FEN string.
+    board->en_passant = (uint8_t)atoi(parts[3]);
+    // Parse the halfmove clock section of the FEN string.
+    board->halfmove_clock = (uint8_t)atoi(parts[4]);
+    // Parse the fullmove number section of the FEN string.
+    board->fullmove_number = (uint8_t)atoi(parts[5]);
+
     return 0;
 }
 
@@ -114,10 +121,6 @@ ssize_t cx_board_fen_dump(cx_board_t const *board, char *fen, size_t n) {
     assert(fen != NULL);
 
     // Dump the piece placement section of the FEN string
-    char *piece_placement = fen;
-    int rank = 7;
-    int file = 0;
-
 
     return 0;
 }
