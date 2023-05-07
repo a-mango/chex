@@ -3,8 +3,10 @@
 //
 
 #include "util.h"
+
 #include <stdio.h>
 #include <wchar.h>
+
 
 static const wchar_t* CX_LOG_HEADERS[] = {
     L"[INFO]   ",
@@ -14,13 +16,6 @@ static const wchar_t* CX_LOG_HEADERS[] = {
 
 void cx_log(char const *msg, cx_log_type_t type) {
     wprintf(L"%ls%s\n", CX_LOG_HEADERS[type], msg);
-}
-
-void cx_print_bin(cx_piece_t n) {
-    for (int i = 0; i < 64; i++) {
-        wprintf(L"%lu", (n >> (63 - i)) & 1);
-    }
-    wprintf(L"\n");
 }
 
 size_t cx_num_bits_set(uint64_t n) {

@@ -13,9 +13,6 @@
 #define CX_BOARD_WIDTH 8
 #define CX_BOARD_SQUARE_CNT 120
 
-#define CX_PRIWSTR "ls"
-#define CX_PRIWCHAR "lc"
-
 #define CX_BIT 1ULL
 
 typedef uint64_t cx_piece_t;
@@ -71,11 +68,10 @@ enum {
 #define CX_WHITE_PIECES (CX_WHITE_PAWN | CX_WHITE_KNIGHT | CX_WHITE_BISHOP | CX_WHITE_ROOK | CX_WHITE_QUEEN | CX_WHITE_KING)
 #define CX_BLACK_PIECES (CX_BLACK_PAWN | CX_BLACK_KNIGHT | CX_BLACK_BISHOP | CX_BLACK_ROOK | CX_BLACK_QUEEN | CX_BLACK_KING)
 #define CX_ALL_PIECES (CX_WHITE_PIECES | CX_BLACK_PIECES)
+#define CX_EMPTY_SQUARES (~CX_ALL_PIECES)
 
 cx_board_t *cx_board_init(void);
 void cx_board_free(cx_board_t *board);
-
-ssize_t cx_board_print(cx_board_t const *board);
 
 ssize_t cx_board_fen_load(cx_board_t *board, char const *fen);
 ssize_t cx_board_fen_dump(cx_board_t const *board, char *fen, size_t n);

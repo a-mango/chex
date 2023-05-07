@@ -14,7 +14,6 @@ typedef enum LogType {
 } cx_log_type_t;
 
 void cx_log(char const *msg, cx_log_type_t type);
-void cx_print_bin(uint64_t n);
 size_t cx_num_bits_set(uint64_t n);
 size_t cx_lsb(uint64_t n);
 size_t cx_msb(uint64_t n);

@@ -5,15 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
 
 #include "board.h"
 #include "util.h"
 
-static const char    *START_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-static const wchar_t *PIECE_SYMBOLS = L".♟♞♝♜♛♚♙♘♗♖♕♔";
-static const wchar_t *FILE_SYMBOLS = L"abcdefgh";
-static const wchar_t *RANK_SYMBOLS = L"12345678";
+static const char    *START_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 cx_board_t *cx_board_init(void) {
     cx_board_t *board = calloc(1, sizeof(cx_board_t));
@@ -30,63 +26,6 @@ cx_board_t *cx_board_init(void) {
 
 void cx_board_free(cx_board_t *board) {
     free(board);
-}
-
-ssize_t cx_board_print(cx_board_t const *board) {
-    cx_log("Board:", CX_LOG_INFO);
-
-    // Print the header
-    wprintf(L"  ");
-    for (int i = 0; i < 8; i++) {
-        wprintf(L" %" CX_PRIWCHAR " ", FILE_SYMBOLS[i]);
-    }
-    wprintf(L"\n");
-
-    // Print the board
-    for (int rank = 7; rank >= 0; --rank) {
-        wprintf(L"%" CX_PRIWCHAR "  ", RANK_SYMBOLS[rank]);
-        for (int file = 0; file < 8; file++) {
-            int index = rank * 8 + file;
-            cx_piece_t piece = 0;
-            if (board->white_pawns & (CX_BIT << index)) {
-                piece = CX_WHITE_PAWN;
-            } else if (board->white_knights & (CX_BIT << index)) {
-                piece = CX_WHITE_KNIGHT;
-            } else if (board->white_bishops & (CX_BIT << index)) {
-                piece = CX_WHITE_BISHOP;
-            } else if (board->white_rooks & (CX_BIT << index)) {
-                piece = CX_WHITE_ROOK;
-            } else if (board->white_queens & (CX_BIT << index)) {
-                piece = CX_WHITE_QUEEN;
-            } else if (board->white_king & (CX_BIT << index)) {
-                piece = CX_WHITE_KING;
-            } else if (board->black_pawns & (CX_BIT << index)) {
-                piece = CX_BLACK_PAWN;
-            } else if (board->black_knights & (CX_BIT << index)) {
-                piece = CX_BLACK_KNIGHT;
-            } else if (board->black_bishops & (CX_BIT << index)) {
-                piece = CX_BLACK_BISHOP;
-            } else if (board->black_rooks & (CX_BIT << index)) {
-                piece = CX_BLACK_ROOK;
-            } else if (board->black_queens & (CX_BIT << index)) {
-                piece = CX_BLACK_QUEEN;
-            } else if (board->black_king & (CX_BIT << index)) {
-                piece = CX_BLACK_KING;
-            } else {
-                piece = CX_EMPTY;
-            };
-            wprintf(L"%" CX_PRIWCHAR "  ", PIECE_SYMBOLS[piece]);
-        }
-        wprintf(L"%" CX_PRIWCHAR "\n", RANK_SYMBOLS[rank]);
-    }
-
-    wprintf(L"  ");
-    for (int i = 0; i < 8; i++) {
-        wprintf(L" %" CX_PRIWCHAR " ", FILE_SYMBOLS[i]);
-    }
-    wprintf(L"\n");
-
-    return 0;
 }
 
 ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
