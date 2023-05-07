@@ -53,9 +53,17 @@ enum MoveFlags {
 };
 
 void cx_move_init(void);
+
+// Play/undo a move on a board.
 void cx_move(cx_move_t move, cx_board_t *board);
 void cx_undo(cx_move_t move, cx_board_t *board);
 
+// Move generation.
+size_t cx_move_gen(cx_board_t *board, cx_move_t *moves);
+size_t cx_move_gen_legal(cx_board_t *board, cx_move_t *moves);
+size_t cx_move_gen_pseudo_legal(cx_board_t *board, cx_move_t *moves);
+
+// Move parsing.
 cx_move_t cx_move_from_str(char const *str);
 char *cx_move_to_str(cx_move_t move);
 
