@@ -18,7 +18,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_compile_options(-g3 -fPIE -pie)
 elseif (CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-DNDEBUG)
-    add_compile_options(-O3 -Werror)
+    add_compile_options(-Ofast -Werror)
 endif ()
 
 # Add the GTest library
