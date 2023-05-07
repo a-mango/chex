@@ -7,12 +7,6 @@
 extern "C" {
 #include "../src/util.h"
 }
-TEST(UtilTest, log) {
-}
-
-TEST(UtilTest, print_bin) {
-
-}
 
 TEST(UtilTest, num_bits_set) {
     uint64_t n = 0b100000000000;
@@ -27,7 +21,7 @@ TEST(UtilTest, num_bits_set) {
     n = UINT64_MAX;
     EXPECT_EQ(cx_num_bits_set(n), 64);
 }
-// Demonstrate some basic assertions.
+
 TEST(UtilTest, lsb) {
     uint64_t n = 0b100000000000;
     EXPECT_EQ(cx_lsb(n), 11);
@@ -54,4 +48,22 @@ TEST(UtilTest, msb) {
 
     n = 0b1010;
     EXPECT_EQ(cx_msb(n), 3);
+}
+
+TEST(UtilTest, pop_lsb) {
+    uint64_t n = 0b100000000000;
+    EXPECT_EQ(cx_pop_lsb(&n), 11);
+    EXPECT_EQ(n, 0b0);
+
+    n = 0b10000000000000;
+    EXPECT_EQ(cx_pop_lsb(&n), 13);
+    EXPECT_EQ(n, 0b0);
+
+    n = 0b1;
+    EXPECT_EQ(cx_pop_lsb(&n), 0);
+    EXPECT_EQ(n, 0b0);
+
+    n = 0b1010;
+    EXPECT_EQ(cx_pop_lsb(&n), 1);
+    EXPECT_EQ(n, 0b1000);
 }
