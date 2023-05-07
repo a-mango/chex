@@ -41,66 +41,39 @@ void cx_print(FILE* stream, wchar_t const *fmt, ...) {
 }
 
 void cx_print_board(cx_board_t const *board) {
-    static const wchar_t* PAD = L" ";
-
     cx_log("Board:", CX_LOG_INFO);
 
-    // Print the header
-    wprintf(L"  ");
-    for (int i = 0; i < 8; i++) {
-        wprintf(L" %" CX_PRIWCHAR " ", FILE_SYMBOLS[i]);
-    }
-    wprintf(L"\n");
+    wchar_t buffer[8][9] = {0};
 
-    // Print the board
-    for (int rank = 7; rank >= 0; --rank) {
-        wprintf(L"%" CX_PRIWCHAR "  ", RANK_SYMBOLS[rank]);
-        for (int file = 0; file < 8; file++) {
-            int index = rank * 8 + file;
-            cx_piece_t piece = 0;
-            if (board->white_pawns & (CX_BIT << index)) {
-                piece = CX_WHITE_PAWN;
-            } else if (board->white_knights & (CX_BIT << index)) {
-                piece = CX_WHITE_KNIGHT;
-            } else if (board->white_bishops & (CX_BIT << index)) {
-                piece = CX_WHITE_BISHOP;
-            } else if (board->white_rooks & (CX_BIT << index)) {
-                piece = CX_WHITE_ROOK;
-            } else if (board->white_queens & (CX_BIT << index)) {
-                piece = CX_WHITE_QUEEN;
-            } else if (board->white_king & (CX_BIT << index)) {
-                piece = CX_WHITE_KING;
-            } else if (board->black_pawns & (CX_BIT << index)) {
-                piece = CX_BLACK_PAWN;
-            } else if (board->black_knights & (CX_BIT << index)) {
-                piece = CX_BLACK_KNIGHT;
-            } else if (board->black_bishops & (CX_BIT << index)) {
-                piece = CX_BLACK_BISHOP;
-            } else if (board->black_rooks & (CX_BIT << index)) {
-                piece = CX_BLACK_ROOK;
-            } else if (board->black_queens & (CX_BIT << index)) {
-                piece = CX_BLACK_QUEEN;
-            } else if (board->black_king & (CX_BIT << index)) {
-                piece = CX_BLACK_KING;
-            } else {
-                piece = CX_EMPTY;
-            };
-            wprintf(L"%" CX_PRIWCHAR "  ", PIECE_SYMBOLS[piece]);
+    // Iterate over the bitboards.
+    for(size_t i = 0; i < 13; ++i) {
+        cx_bitboard_t bb = board->pieces[i];
+        // Print pieces to buffer using PIECE_SYMBOLS
+        while (bb) {
+            size_t pos = cx_pop_lsb(&bb);
+            size_t rank = pos / 8;
+            size_t file = pos % 8;
+            buffer[rank][file] = (wchar_t *)PIECE_SYMBOLS[i];
         }
-        wprintf(L"%" CX_PRIWCHAR "\n", RANK_SYMBOLS[rank]);
     }
-
-    wprintf(L"  ");
-    for (int i = 0; i < 8; i++) {
-        wprintf(L" %" CX_PRIWCHAR " ", FILE_SYMBOLS[i]);
+    for(size_t i = 0; i < CX_BOARD_SIZE; ++i) {
+        wprintf(L"%ls\n", buffer[i]);
     }
     wprintf(L"\n");
 }
 
 void cx_print_bin(cx_piece_t n) {
-    cx_print(stdout, L"%" CX_PRIWSTR, "0b");
-    for (int i = 0; i < 64; i++) {
+    cx_print(stdout, L"%" CX_PRIWSTR, L"0b");
+    for (int i = 0; i < 64; i++)
         wprintf(L"%lu", (n >> (63 - i)) & 1);
-    }
     wprintf(L"\n");
+}
+
+void cx_print_bitboard(cx_bitboard_t n) {
+    for(size_t i = 0; i < CX_BOARD_SIZE; ++i) {
+        for(size_t j = 0; j < CX_BOARD_SIZE; ++j) {
+            wprintf(L"%c", (n & (CX_BIT << (i * CX_BOARD_SIZE + j))) ? 'x' : '.');
+        }
+        wprintf(L"\n");
+    }
 }
