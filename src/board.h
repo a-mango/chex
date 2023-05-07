@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #define CX_BOARD_SIZE 8
 #define CX_BOARD_WIDTH 8
@@ -21,7 +22,11 @@ typedef uint64_t cx_piece_t;
 typedef uint64_t cx_bitboard_t;
 
 typedef struct {
-
+    bool     active_color;
+    uint16_t castle_rights;
+    uint8_t  en_passant;
+    uint8_t  halfmove_clock;
+    uint8_t  fullmove_number;
 
     cx_bitboard_t white_pawns;
     cx_bitboard_t white_knights;
@@ -52,6 +57,15 @@ enum {
     CX_BLACK_ROOK,
     CX_BLACK_QUEEN,
     CX_BLACK_KING,
+};
+
+enum { CX_COLOR_WHITE, CX_COLOR_BLACK };
+
+enum {
+    CX_CASTLE_WHITE_KING = CX_BIT << 0,
+    CX_CASTLE_WHITE_QUEEN = CX_BIT << 1,
+    CX_CASTLE_BLACK_KING = CX_BIT << 2,
+    CX_CASTLE_BLACK_QUEEN = CX_BIT << 3,
 };
 
 #define CX_WHITE_PIECES (CX_WHITE_PAWN | CX_WHITE_KNIGHT | CX_WHITE_BISHOP | CX_WHITE_ROOK | CX_WHITE_QUEEN | CX_WHITE_KING)
