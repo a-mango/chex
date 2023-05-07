@@ -53,12 +53,11 @@ void cx_print_board(cx_board_t const *board) {
             size_t pos = cx_pop_lsb(&bb);
             size_t rank = pos / 8;
             size_t file = pos % 8;
-            buffer[rank][file] = (wchar_t *)PIECE_SYMBOLS[i];
+            buffer[rank][file] = (wchar_t)PIECE_SYMBOLS[i];
         }
     }
-    for(size_t i = 0; i < CX_BOARD_SIZE; ++i) {
+    for(size_t i = 0; i < CX_BOARD_SIZE; ++i)
         wprintf(L"%ls\n", buffer[i]);
-    }
     wprintf(L"\n");
 }
 
