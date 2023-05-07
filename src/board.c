@@ -52,7 +52,7 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     assert(board != NULL);
     assert(fen != NULL);
 
-    cx_log("Loading FEN", CX_LOG_INFO);
+    cx_log("Board FEN import", CX_LOG_INFO);
 
     // Split the FEN string into its component parts
     char fen_copy[strlen(fen) + 1]; // FIXME: use malloc or fixed size buffer
@@ -114,13 +114,56 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     return 0;
 }
 
-ssize_t cx_board_fen_dump(cx_board_t const *board, char *fen, size_t n) {
-    cx_log("Dumping FEN", CX_LOG_INFO);
-    // Dump the board into a FEN string
+ssize_t cx_board_fen(cx_board_t const *board, char *fen) {
+    cx_log("Board FEN", CX_LOG_INFO);
+    // Export the board into a FEN string.
     assert(board != NULL);
     assert(fen != NULL);
 
-    // Dump the piece placement section of the FEN string
+    // Dump the piece placement section of the FEN string.
+    char *c = fen;
+    for (int rank = 7; rank >= 0; rank--) {
+        int empty_squares = 0;
+        for (int file = 0; file < 8; file++) {
+            cx_piece_t piece = cx_board_get_piece(board, (uint8_t)(rank * 8 + file));
+            if (piece == CX_EMPTY) {
+                empty_squares++;
+            } else {
+                if (empty_squares > 0) {
+                    *c++ = (char)('0' + empty_squares);
+                    empty_squares = 0;
+                }
+                *c++ = FEN_PIECES[CX_PIECE_COLOR(piece) == CX_WHITE ? CX_PIECE_TYPE(piece) : CX_PIECE_TYPE(piece) + 6];
+            }
+        }
+        if (empty_squares > 0) {
+            *c++ = (char)('0' + empty_squares);
+        }
+        if (rank > 0) {
+            *c++ = '/';
+        }
+    }
+    *c++ = ' ';
+    // Dump the active color section of the FEN string.
+    *c++ = (board->active_color == CX_WHITE) ? 'w' : 'b';
+    *c++ = ' ';
+    // Dump the castling availability section of the FEN string.
+    if (board->castle_rights & CX_CASTLE_WHITE_KINGSIDE)
+        *c++ = 'K';
+    if (board->castle_rights & CX_CASTLE_WHITE_QUEENSIDE)
+        *c++ = 'Q';
+    if (board->castle_rights & CX_CASTLE_BLACK_KINGSIDE)
+        *c++ = 'k';
+    if (board->castle_rights & CX_CASTLE_BLACK_QUEENSIDE)
+        *c++ = 'q';
+    if (board->castle_rights == 0)
+        *c++ = '-';
+    *c++ = ' ';
+    // Dump the en passant target square section of the FEN string.
+    if (board->en_passant == 0)
+        *c++ = '-';
+    else
+        sprintf(c, "%d", board->en_passant);
 
     return 0;
 }

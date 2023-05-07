@@ -5,9 +5,9 @@
 #ifndef CHEX_BOARD_H
 #define CHEX_BOARD_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
-#include <stdbool.h>
 
 #define CX_BOARD_SIZE 8
 #define CX_BOARD_WIDTH 8
@@ -19,7 +19,7 @@ typedef uint64_t cx_piece_t;
 typedef uint64_t cx_bitboard_t;
 
 typedef struct {
-    bool     active_color;
+    uint8_t  active_color;
     uint16_t castle_rights;
     uint8_t  en_passant;
     uint8_t  halfmove_clock;
@@ -62,25 +62,25 @@ enum CxColor {
 };
 
 enum CxPiece {
-    CX_EMPTY = 0,
-    CX_WHITE_PAWN = (CX_WHITE | CX_PAWN),
+    CX_EMPTY        = 0,
+    CX_WHITE_PAWN   = (CX_WHITE | CX_PAWN),
     CX_WHITE_KNIGHT = (CX_WHITE | CX_KNIGHT),
     CX_WHITE_BISHOP = (CX_WHITE | CX_BISHOP),
-    CX_WHITE_ROOK = (CX_WHITE | CX_ROOK),
-    CX_WHITE_QUEEN = (CX_WHITE | CX_QUEEN),
-    CX_WHITE_KING = (CX_WHITE | CX_KING),
-    CX_BLACK_PAWN = (CX_BLACK | CX_PAWN),
+    CX_WHITE_ROOK   = (CX_WHITE | CX_ROOK),
+    CX_WHITE_QUEEN  = (CX_WHITE | CX_QUEEN),
+    CX_WHITE_KING   = (CX_WHITE | CX_KING),
+    CX_BLACK_PAWN   = (CX_BLACK | CX_PAWN),
     CX_BLACK_KNIGHT = (CX_BLACK | CX_KNIGHT),
     CX_BLACK_BISHOP = (CX_BLACK | CX_BISHOP),
-    CX_BLACK_ROOK = (CX_BLACK | CX_ROOK),
-    CX_BLACK_QUEEN = (CX_BLACK | CX_QUEEN),
-    CX_BLACK_KING = (CX_BLACK | CX_KING),
+    CX_BLACK_ROOK   = (CX_BLACK | CX_ROOK),
+    CX_BLACK_QUEEN  = (CX_BLACK | CX_QUEEN),
+    CX_BLACK_KING   = (CX_BLACK | CX_KING),
 };
 
 enum {
-    CX_CASTLE_WHITE_KINGSIDE = CX_BIT << 0,
+    CX_CASTLE_WHITE_KINGSIDE  = CX_BIT << 0,
     CX_CASTLE_WHITE_QUEENSIDE = CX_BIT << 1,
-    CX_CASTLE_BLACK_KINGSIDE = CX_BIT << 2,
+    CX_CASTLE_BLACK_KINGSIDE  = CX_BIT << 2,
     CX_CASTLE_BLACK_QUEENSIDE = CX_BIT << 3,
 };
 
@@ -95,11 +95,10 @@ enum {
 
 // Functions.
 cx_board_t *cx_board_init(void);
-void cx_board_free(cx_board_t *board);
+void        cx_board_free(cx_board_t *board);
+cx_piece_t  cx_board_get_piece(cx_board_t const *board, uint8_t square);
+ssize_t     cx_board_fen_load(cx_board_t *board, char const *fen);
+ssize_t     cx_board_fen(cx_board_t const *board, char *fen);
 
-cx_piece_t cx_board_get_piece(cx_board_t const *board, uint8_t square);
-ssize_t cx_board_fen_load(cx_board_t *board, char const *fen);
-ssize_t cx_board_fen_dump(cx_board_t const *board, char *fen, size_t n);
 
-
-#endif//CHEX_BOARD_H
+#endif  // CHEX_BOARD_H
