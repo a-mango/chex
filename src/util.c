@@ -37,10 +37,22 @@ size_t cx_lsb(uint64_t n) {
 }
 
 size_t cx_msb(uint64_t n) {
-    size_t pos = 0;
-    while (n) {
-        ++pos;
-        n >>= 1;
+    // 0-based indexing
+    size_t pos = 63;
+    while (!(n & (CX_BIT << pos))) {
+        --pos;
     }
+    return pos;
+}
+
+size_t cx_pop_lsb(uint64_t *n) {
+    size_t pos = cx_lsb(*n);
+    *n &= *n - 1;
+    return pos;
+}
+
+size_t cx_pop_msb(uint64_t *n) {
+    size_t pos = cx_msb(*n);
+    *n &= *n - 1;
     return pos;
 }
