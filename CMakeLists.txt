@@ -60,9 +60,13 @@ file(GLOB_RECURSE HEADER_FILES
 # Add the executable(s)
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
+# Add test files
+file(GLOB_RECURSE TEST_FILES
+	${CMAKE_SOURCE_DIR}/test/*.cpp)
+
 # Configure Google Test
 enable_testing()
-add_executable(test_engine test/engine.cpp)
+add_executable(test_engine ${TEST_FILES} src/board.c src/util.c)
 target_link_libraries(test_engine GTest::gtest_main)
 include(GoogleTest)
 gtest_discover_tests(test_engine)
