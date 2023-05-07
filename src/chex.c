@@ -7,6 +7,15 @@
 
 #define CHEX_VERSION "0.0.1"
 
+/**
+ * Entry point for the Chex Chess Engine.
+ *
+ * @return The exit code.
+ *
+ * TODO: Add command line arguments
+ * TODO: Add UCI support
+ * TODO: Add a REPL
+ */
 int main(void) {
     cx_print_init();
 
