@@ -15,5 +15,6 @@ int main(void) {
     cx_board_t *board = cx_board_init();
     cx_board_print(board);
 
+    cx_board_free(board);
     return 0;
 }
