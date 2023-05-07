@@ -66,7 +66,7 @@ file(GLOB_RECURSE TEST_FILES
 
 # Configure Google Test
 enable_testing()
-add_executable(test_engine ${TEST_FILES} src/board.c src/util.c src/print.c)
-target_link_libraries(test_engine GTest::gtest_main)
+add_executable(chex_test ${TEST_FILES} src/board.c src/util.c src/print.c)
+target_link_libraries(chex_test GTest::gtest_main)
 include(GoogleTest)
-gtest_discover_tests(test_engine)
+gtest_discover_tests(chex_test)
