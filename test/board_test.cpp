@@ -6,7 +6,6 @@
 
 extern "C" {
 #include "../src/util.h"
-#include "../src/board.h"
 #include "../src/print.h"
 }
 
