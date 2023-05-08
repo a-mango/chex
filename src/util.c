@@ -4,28 +4,6 @@
 
 #include "util.h"
 
-#include <stdio.h>
-
-static const wchar_t *CX_LOG_HEADERS[] = {
-    L"[INFO]   ",
-    L"[WARN]   ",
-    L"[ERROR]  ",
-    L"[DEBUG]  ",
-};
-
-void cx_log(char const *msg, cx_log_type_t type) {
-    wprintf(L"%ls%s\n", CX_LOG_HEADERS[type], msg);
-}
-
-void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...) {
-    va_list args;
-    va_start(args, type);
-    wprintf(L"%ls", CX_LOG_HEADERS[type]);
-    vwprintf(msg, args);
-    wprintf(L"\n");
-    va_end(args);
-}
-
 size_t cx_num_bits_set(uint64_t n) {
     size_t count = 0;
     while (n) {

@@ -10,17 +10,20 @@
 
 #include "board.h"
 
+typedef enum LogType {
+    CX_LOG_INFO,
+    CX_LOG_WARN,
+    CX_LOG_ERROR,
+    CX_LOG_DEBUG,
+} cx_log_type_t;
+
 void cx_print_init(void);
-/**
- * Print a formatted string to a stream.
- *
- * @param stream The stream to print to.
- * @param fmt The format string.
- * @param ... The format string arguments.
- */
-void cx_print(FILE* stream, wchar_t const *fmt, ...);
+void cx_print(FILE *stream, wchar_t const *fmt, ...);
 void cx_print_board(cx_board_t const *board);
 void cx_print_bin(uint64_t n);
 void cx_print_bitboard(cx_bitboard_t n);
 
-#endif//CHEX_PRINT_H
+void cx_log(char const *msg, cx_log_type_t type);
+void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...);
+
+#endif  // CHEX_PRINT_H

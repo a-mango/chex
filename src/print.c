@@ -26,10 +26,10 @@
 #define DEFAULT_COLOR ""
 
 static const wchar_t *CX_LOG_HEADERS[] = {
-    L"["ANSI_COLOR_CYAN"INFO"ANSI_COLOR_RESET"]   ",
-    L"["ANSI_COLOR_MAGENTA"WARN"ANSI_COLOR_RESET"]   ",
-    L"["ANSI_COLOR_RED"ERROR"ANSI_COLOR_RESET"]  ",
-    L"["ANSI_COLOR_YELLOW"DEBUG"ANSI_COLOR_RESET"]  ",
+    L"[" ANSI_COLOR_CYAN "INFO" ANSI_COLOR_RESET "]   ",
+    L"[" ANSI_COLOR_MAGENTA "WARN" ANSI_COLOR_RESET "]   ",
+    L"[" ANSI_COLOR_RED "ERROR" ANSI_COLOR_RESET "]  ",
+    L"[" ANSI_COLOR_YELLOW "DEBUG" ANSI_COLOR_RESET "]  ",
 };
 
 
@@ -48,20 +48,6 @@ void cx_print(FILE *stream, wchar_t const *fmt, ...) {
     vfwprintf(stream, fmt, args);
     va_end(args);
 }
-
-void cx_log(char const *msg, cx_log_type_t type) {
-    wprintf(L"%ls%s\n", CX_LOG_HEADERS[type], msg);
-}
-
-void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...) {
-    va_list args;
-    va_start(args, type);
-    wprintf(L"%ls", CX_LOG_HEADERS[type]);
-    vwprintf(msg, args);
-    wprintf(L"\n");
-    va_end(args);
-}
-
 
 void cx_print_board(cx_board_t const *board) {
     wchar_t buffer[8][9] = {0};
@@ -95,4 +81,17 @@ void cx_print_bitboard(cx_bitboard_t n) {
         wprintf(L"%c", symbol);
     }
     wprintf(L"\n");
+}
+
+void cx_log(char const *msg, cx_log_type_t type) {
+    wprintf(L"%ls%s\n", CX_LOG_HEADERS[type], msg);
+}
+
+void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...) {
+    va_list args;
+    va_start(args, type);
+    wprintf(L"%ls", CX_LOG_HEADERS[type]);
+    vwprintf(msg, args);
+    wprintf(L"\n");
+    va_end(args);
 }
