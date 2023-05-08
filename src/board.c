@@ -11,9 +11,9 @@
 
 #include "print.h"
 
-const char        *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-const char        *EMPTY_POS  = "8/8/8/8/8/8/8/8 w - - 0 1";
-static const char *FEN_PIECES = " PNBRQKpnbrqk";
+const char *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const char *EMPTY_POS  = "8/8/8/8/8/8/8/8 w - - 0 1";
+const char *FEN_PIECES = " PNBRQKpnbrqk";
 
 cx_board_t *cx_board_init(void) {
     cx_board_t *board = calloc(1, sizeof(cx_board_t));
@@ -54,8 +54,8 @@ void cx_board_set_piece(cx_board_t *board, uint8_t square, cx_piece_t piece) {
     assert(square < 64);
     assert(piece != CX_EMPTY);
 
-    cx_bitboard_t mask = CX_BIT << square;
-    cx_piece_t board_index = (piece & 0b111) + (piece & 0b1000 ? 0 : 6);
+    cx_bitboard_t mask        = CX_BIT << square;
+    cx_piece_t    board_index = (piece & 0b111) + (piece & 0b1000 ? 0 : 6);
     board->pieces[board_index] |= mask;
 }
 
