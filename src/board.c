@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "util.h"
+#include "print.h"
 
 const char *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 const char *EMPTY_POS = "8/8/8/8/8/8/8/8 w - - 0 1";
@@ -86,7 +86,7 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
             file += *c - '0';
         } else {
             // Place the piece on the board
-            int    index       = rank * 8 + file;
+            int    index       = rank * 8 + 7 - file;
             size_t board_index = (size_t)(strchr(FEN_PIECES, *c) - FEN_PIECES);
             cx_log_va(L"%s: piece: %c pos: %d bb: %zu",CX_LOG_DEBUG , __func__, *c, index, board_index);
             board->pieces[board_index] |= CX_BIT << index;
