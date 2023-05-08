@@ -23,7 +23,15 @@
 #define ANSI_COLOR_MAGENTA "\x1b[35m"
 #define ANSI_COLOR_CYAN "\x1b[36m"
 #define ANSI_COLOR_RESET "\x1b[0m"
-#define DEFAULT_COLOR ANSI_COLOR_YELLOW
+#define DEFAULT_COLOR ""
+
+static const wchar_t *CX_LOG_HEADERS[] = {
+    L"["ANSI_COLOR_CYAN"INFO"ANSI_COLOR_RESET"]   ",
+    L"["ANSI_COLOR_MAGENTA"WARN"ANSI_COLOR_RESET"]   ",
+    L"["ANSI_COLOR_RED"ERROR"ANSI_COLOR_RESET"]  ",
+    L"["ANSI_COLOR_YELLOW"DEBUG"ANSI_COLOR_RESET"]  ",
+};
+
 
 static const wchar_t *PIECE_SYMBOLS = L".♟♞♝♜♛♚♙♘♗♖♕♔";
 static const wchar_t *FILE_SYMBOLS  = L"abcdefgh";
@@ -40,6 +48,20 @@ void cx_print(FILE *stream, wchar_t const *fmt, ...) {
     vfwprintf(stream, fmt, args);
     va_end(args);
 }
+
+void cx_log(char const *msg, cx_log_type_t type) {
+    wprintf(L"%ls%s\n", CX_LOG_HEADERS[type], msg);
+}
+
+void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...) {
+    va_list args;
+    va_start(args, type);
+    wprintf(L"%ls", CX_LOG_HEADERS[type]);
+    vwprintf(msg, args);
+    wprintf(L"\n");
+    va_end(args);
+}
+
 
 void cx_print_board(cx_board_t const *board) {
     wchar_t buffer[8][9] = {0};
