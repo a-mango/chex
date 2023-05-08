@@ -132,9 +132,9 @@ char* cx_board_fen(cx_board_t const *board) {
     // Dump the piece placement section of the FEN string.
     char *c = calloc(120, sizeof(char));
     char *p = c;
-    for (int rank = 7; rank >= 0; rank--) {
+    for (int rank = 7; rank >= 0; --rank) {
         int empty_squares = 0;
-        for (int file = 0; file < 8; file++) {
+        for (int file = 7; file >= 0; --file) {
             cx_piece_t piece = cx_board_get_piece(board, (uint8_t)(rank * 8 + file));
             if (piece == CX_EMPTY) {
                 empty_squares++;
@@ -158,14 +158,14 @@ char* cx_board_fen(cx_board_t const *board) {
     *c++ = (board->active_color == CX_WHITE) ? 'w' : 'b';
     *c++ = ' ';
     // Dump the castling availability section of the FEN string.
-    if (board->castle_rights & CX_CASTLE_WHITE_KINGSIDE)
-        *c++ = 'K';
-    if (board->castle_rights & CX_CASTLE_WHITE_QUEENSIDE)
-        *c++ = 'Q';
     if (board->castle_rights & CX_CASTLE_BLACK_KINGSIDE)
         *c++ = 'k';
     if (board->castle_rights & CX_CASTLE_BLACK_QUEENSIDE)
         *c++ = 'q';
+    if (board->castle_rights & CX_CASTLE_WHITE_KINGSIDE)
+        *c++ = 'K';
+    if (board->castle_rights & CX_CASTLE_WHITE_QUEENSIDE)
+        *c++ = 'Q';
     if (board->castle_rights == 0)
         *c++ = '-';
     *c++ = ' ';
