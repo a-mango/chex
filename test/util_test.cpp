@@ -67,3 +67,21 @@ TEST(UtilTest, pop_lsb) {
     EXPECT_EQ(cx_pop_lsb(&n), 1);
     EXPECT_EQ(n, 0b1000);
 }
+
+TEST(UtilTest, pop_msb) {
+    uint64_t n = 0b100000000000;
+    EXPECT_EQ(cx_pop_msb(&n), 11);
+    EXPECT_EQ(n, 0b0);
+
+    n = 0b10000000000000;
+    EXPECT_EQ(cx_pop_msb(&n), 13);
+    EXPECT_EQ(n, 0b0);
+
+    n = 0b1;
+    EXPECT_EQ(cx_pop_msb(&n), 0);
+    EXPECT_EQ(n, 0b0);
+
+    n = 0b1010;
+    EXPECT_EQ(cx_pop_msb(&n), 3);
+    EXPECT_EQ(n, 0b10);
+}

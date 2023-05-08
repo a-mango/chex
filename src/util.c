@@ -38,6 +38,6 @@ size_t cx_pop_lsb(uint64_t *n) {
 
 size_t cx_pop_msb(uint64_t *n) {
     size_t pos = cx_msb(*n);
-    *n &= *n - 1;
+    *n &= (*n ^ (CX_BIT << pos));
     return pos;
 }
