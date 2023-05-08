@@ -101,6 +101,7 @@ extern const char *EMPTY_POS;
 cx_board_t *cx_board_init(void);
 void        cx_board_free(cx_board_t *board);
 cx_piece_t  cx_board_get_piece(cx_board_t const *board, uint8_t square);
+void        cx_board_set_piece(cx_board_t *board, uint8_t square, cx_piece_t piece);
 ssize_t     cx_board_fen_load(cx_board_t *board, char const *fen);
 char*       cx_board_fen(cx_board_t const *board);
 

@@ -49,6 +49,21 @@ TEST(BoardTest, get_piece) {
     cx_board_free(board);
 }
 
+TEST(BoardTest, set_piece) {
+    cx_board_t *board = cx_board_init();
+    cx_board_fen_load(board, EMPTY_POS);
+    cx_board_set_piece(board, 0, CX_WHITE_ROOK);
+    cx_board_set_piece(board, 63, CX_BLACK_ROOK);
+    cx_board_set_piece(board, 8, CX_WHITE_PAWN);
+    cx_board_set_piece(board, 48, CX_BLACK_PAWN);
+    EXPECT_EQ(cx_board_get_piece(board, 0), CX_WHITE_ROOK);
+    EXPECT_EQ(cx_board_get_piece(board, 63), CX_BLACK_ROOK);
+    EXPECT_EQ(cx_board_get_piece(board, 8), CX_WHITE_PAWN);
+    EXPECT_EQ(cx_board_get_piece(board, 48), CX_BLACK_PAWN);
+
+    cx_board_free(board);
+}
+
 TEST(BoardTest, fen_load) {
     cx_board_t *board = cx_board_init();
     EXPECT_EQ(board->pieces[CX_BB_WHITE_ROOKS], 0b10000001);

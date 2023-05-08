@@ -3,16 +3,16 @@
 //
 #include "board.h"
 
-#include <inttypes.h>
 #include <assert.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "print.h"
 
-const char *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-const char *EMPTY_POS = "8/8/8/8/8/8/8/8 w - - 0 1";
+const char        *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const char        *EMPTY_POS  = "8/8/8/8/8/8/8/8 w - - 0 1";
 static const char *FEN_PIECES = " PNBRQKpnbrqk";
 
 cx_board_t *cx_board_init(void) {
@@ -22,7 +22,7 @@ cx_board_t *cx_board_init(void) {
         exit(EXIT_FAILURE);
     }
 
-    cx_log_va(L"%s: initialized board at address %p", CX_LOG_DEBUG, __func__, (void*)board);
+    cx_log_va(L"%s: initialized board at address %p", CX_LOG_DEBUG, __func__, (void *)board);
     cx_board_fen_load(board, START_POS);
 
     return board;
@@ -49,6 +49,16 @@ cx_piece_t cx_board_get_piece(cx_board_t const *board, uint8_t square) {
     return CX_EMPTY;
 }
 
+void cx_board_set_piece(cx_board_t *board, uint8_t square, cx_piece_t piece) {
+    assert(board != NULL);
+    assert(square < 64);
+    assert(piece != CX_EMPTY);
+
+    cx_bitboard_t mask = CX_BIT << square;
+    cx_piece_t board_index = (piece & 0b111) + (piece & 0b1000 ? 0 : 6);
+    board->pieces[board_index] |= mask;
+}
+
 ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     // TODO: validate FEN string and treat errors appropriately.
     assert(board != NULL);
@@ -62,7 +72,7 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     }
 
     // Split the FEN string into its component parts
-    char fen_copy[strlen(fen) + 1]; // FIXME: use malloc or fixed size buffer
+    char fen_copy[strlen(fen) + 1];  // FIXME: use malloc or fixed size buffer
     strcpy(fen_copy, fen);
     char *parts[6] = {0};
     char *token    = strtok(fen_copy, " ");
@@ -88,7 +98,7 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
             // Place the piece on the board
             int    index       = rank * 8 + 7 - file;
             size_t board_index = (size_t)(strchr(FEN_PIECES, *c) - FEN_PIECES);
-            cx_log_va(L"%s: piece: %c pos: %d bb: %zu",CX_LOG_DEBUG , __func__, *c, index, board_index);
+            cx_log_va(L"%s: piece: %c pos: %d bb: %zu", CX_LOG_DEBUG, __func__, *c, index, board_index);
             board->pieces[board_index] |= CX_BIT << index;
             ++file;
         }
@@ -119,12 +129,12 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     // Parse the fullmove number section of the FEN string.
     board->fullmove_number = (uint8_t)atoi(parts[5]);
 
-    cx_log_va(L"%s: loaded position %s",CX_LOG_DEBUG , __func__, fen);
+    cx_log_va(L"%s: loaded position %s", CX_LOG_DEBUG, __func__, fen);
 
     return 0;
 }
 
-char* cx_board_fen(cx_board_t const *board) {
+char *cx_board_fen(cx_board_t const *board) {
     cx_log("Board FEN", CX_LOG_INFO);
     // Export the board into a FEN string.
     assert(board != NULL);
@@ -140,7 +150,7 @@ char* cx_board_fen(cx_board_t const *board) {
                 empty_squares++;
             } else {
                 if (empty_squares > 0) {
-                    *c++ = (char)('0' + empty_squares);
+                    *c++          = (char)('0' + empty_squares);
                     empty_squares = 0;
                 }
                 *c++ = FEN_PIECES[CX_PIECE_COLOR(piece) == CX_WHITE ? CX_PIECE_TYPE(piece) : CX_PIECE_TYPE(piece) + 6];
