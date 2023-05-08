@@ -1,9 +1,10 @@
 #include <locale.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "board.h"
 #include "util.h"
-#include "print.h"
+#include "log.h"
 
 #define CHEX_VERSION "0.0.1"
 
@@ -19,12 +20,14 @@
 int main(void) {
     cx_print_init();
 
-    cx_log("Chex Chess Engine", CX_LOG_INFO);
-    cx_log("Build: "CHEX_VERSION, CX_LOG_INFO);
+    cx_log(L"Chex Chess Engine", CX_LOG_INFO);
+    cx_log(L"Build: "CHEX_VERSION, CX_LOG_INFO);
 
     cx_board_t *board = cx_board_init();
+//    cx_board_fen_load(board, "r7/8/8/8/8/8/7/7R w - - 0 1");
     cx_print_board(board);
 
     cx_board_free(board);
     return 0;
 }
+
