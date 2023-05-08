@@ -6,9 +6,9 @@
 #include "util.h"
 
 
-static const wchar_t *PIECE_SYMBOLS = L".♟♞♝♜♛♚♙♘♗♖♕♔";
-static const wchar_t *FILE_SYMBOLS  = L"abcdefgh";
-static const wchar_t *RANK_SYMBOLS  = L"12345678";
+const wchar_t *PIECE_SYMBOLS = L".♟♞♝♜♛♚♙♘♗♖♕♔";
+const wchar_t *FILE_SYMBOLS  = L"abcdefgh";
+const wchar_t *RANK_SYMBOLS  = L"12345678";
 
 void cx_print_init(void) {
     setlocale(LC_ALL, "en_US.UTF-8");

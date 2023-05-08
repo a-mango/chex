@@ -30,6 +30,10 @@ typedef wchar_t        cx_char;
 typedef cx_char       *cx_str;
 typedef cx_char const *cx_cstr;
 
+extern cx_cstr PIECE_SYMBOLS;
+extern cx_cstr FILE_SYMBOLS;
+extern cx_cstr RANK_SYMBOLS;
+
 void cx_print_init(void);
 void cx_print(FILE *stream, wchar_t const *fmt, ...);
 void cx_print_va(FILE *stream, wchar_t const *fmt, va_list args);
