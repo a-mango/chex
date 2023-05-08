@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
 project(chex)
 
-# Set the C standard to C23
+# Set C and C++ standards
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
-
 set(CMAKE_CXX_STANDARD 14)
 
 # Set default compile flags for GCC
@@ -43,30 +42,37 @@ if (ENABLE_ASAN AND CMAKE_C_COMPILER_ID MATCHES "GNU|Clang" AND CMAKE_BUILD_TYPE
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SAN_OPT}")
 endif ()
 
-# Include additional libraries or header files (if any)
-# include_directories(include)
-# add_library(mylib src/mylib.c)
-
-# Add source files
+# Find source files
 file(GLOB_RECURSE SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/src/*.c
 	${CMAKE_SOURCE_DIR}/src/*.cpp)
+list(REMOVE_ITEM SOURCE_FILES "src/chex.c")
 
-# Add header files
+# Find header files
 file(GLOB_RECURSE HEADER_FILES
 	${CMAKE_SOURCE_DIR}/src/*.h
 	${CMAKE_SOURCE_DIR}/src/*.hpp)
 
-# Add the executable(s)
-add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
-
-# Add test files
+# Find test files
 file(GLOB_RECURSE TEST_FILES
 	${CMAKE_SOURCE_DIR}/test/*.cpp)
 
+# Executable names
+set(EXE_NAME ${CMAKE_PROJECT_NAME})
+set(LIB_NAME ${CMAKE_PROJECT_NAME}_lib)
+set(TEST_NAME ${CMAKE_PROJECT_NAME}_test)
+
+# Add the library
+add_library(${LIB_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
+
+# Add the executable(s)
+add_executable(${EXE_NAME} ${SOURCE_FILES} ${HEADER_FILES} src/chex.c)
+target_link_libraries(${EXE_NAME} ${LIB_NAME})
+
 # Configure Google Test
 enable_testing()
-add_executable(chex_test ${TEST_FILES} src/board.c src/util.c src/print.c src/move.c src/log.c)
-target_link_libraries(chex_test GTest::gtest_main)
+add_executable(${TEST_NAME} ${TEST_FILES})
+target_link_libraries(${TEST_NAME} ${LIB_NAME})
+target_link_libraries(${TEST_NAME} GTest::gtest_main)
 include(GoogleTest)
-gtest_discover_tests(chex_test)
+gtest_discover_tests(${TEST_NAME})
