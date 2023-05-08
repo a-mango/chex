@@ -71,7 +71,7 @@ enum CxColor {
     CX_BLACK = CX_BIT << 4
 };
 
-enum CxPiece {
+enum CxPiece : cx_piece_t {
     CX_EMPTY        = 0,
     CX_WHITE_PAWN   = (CX_WHITE | CX_PAWN),
     CX_WHITE_KNIGHT = (CX_WHITE | CX_KNIGHT),
