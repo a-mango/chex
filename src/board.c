@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "print.h"
+#include "log.h"
 
 const char *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 const char *EMPTY_POS  = "8/8/8/8/8/8/8/8 w - - 0 1";
