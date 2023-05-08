@@ -14,7 +14,7 @@ void cx_move(cx_move_t move, cx_board_t *board) {
     assert(board != NULL);
     assert(move != CX_MOVE_NULL);
 
-    cx_log_va(L"%s: play move %s", CX_LOG_DEBUG, __func__, cx_move_str(move));
+    cx_log_va(L"%s: play move %s", CX_LOG_DEBUG, __func__, cx_move_str(board, move));
     cx_piece_t piece = cx_board_get_piece(board, CX_MOVE_FROM & move);
     cx_board_set_piece(board, CX_MOVE_FROM & move, CX_EMPTY);
     cx_board_set_piece(board, CX_MOVE_TO & move, piece);
