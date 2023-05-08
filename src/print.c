@@ -1,7 +1,3 @@
-//
-// Created by acm on 5/7/23.
-//
-
 #include "print.h"
 
 #include <locale.h>
@@ -9,28 +5,6 @@
 #include <stdio.h>
 
 #include "util.h"
-
-// Display settings
-#define DEFAULT_STREAM stdout
-#define CX_PRIWSTR "ls"
-#define CX_PRIWCHAR "lc"
-
-// Eye candy
-#define ANSI_COLOR_RED "\x1b[31m"
-#define ANSI_COLOR_GREEN L"\x1b[32m"
-#define ANSI_COLOR_YELLOW L"\x1b[33m"
-#define ANSI_COLOR_BLUE "\x1b[34m"
-#define ANSI_COLOR_MAGENTA "\x1b[35m"
-#define ANSI_COLOR_CYAN "\x1b[36m"
-#define ANSI_COLOR_RESET "\x1b[0m"
-#define DEFAULT_COLOR ""
-
-static const wchar_t *CX_LOG_HEADERS[] = {
-    L"[" ANSI_COLOR_CYAN "INFO" ANSI_COLOR_RESET "]   ",
-    L"[" ANSI_COLOR_MAGENTA "WARN" ANSI_COLOR_RESET "]   ",
-    L"[" ANSI_COLOR_RED "ERROR" ANSI_COLOR_RESET "]  ",
-    L"[" ANSI_COLOR_YELLOW "DEBUG" ANSI_COLOR_RESET "]  ",
-};
 
 
 static const wchar_t *PIECE_SYMBOLS = L".♟♞♝♜♛♚♙♘♗♖♕♔";
@@ -81,17 +55,4 @@ void cx_print_bitboard(cx_bitboard_t n) {
         wprintf(L"%c", symbol);
     }
     wprintf(L"\n");
-}
-
-void cx_log(char const *msg, cx_log_type_t type) {
-    wprintf(L"%ls%s\n", CX_LOG_HEADERS[type], msg);
-}
-
-void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...) {
-    va_list args;
-    va_start(args, type);
-    wprintf(L"%ls", CX_LOG_HEADERS[type]);
-    vwprintf(msg, args);
-    wprintf(L"\n");
-    va_end(args);
 }

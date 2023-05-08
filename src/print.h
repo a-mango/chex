@@ -10,20 +10,28 @@
 
 #include "board.h"
 
-typedef enum LogType {
-    CX_LOG_INFO,
-    CX_LOG_WARN,
-    CX_LOG_ERROR,
-    CX_LOG_DEBUG,
-} cx_log_type_t;
+
+#define DEFAULT_STREAM stdout
+#define CX_PRIWSTR "ls"
+#define CX_PRIWCHAR "lc"
+
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_GREEN L"\x1b[32m"
+#define ANSI_COLOR_YELLOW L"\x1b[33m"
+#define ANSI_COLOR_BLUE L"\x1b[34m"
+#define ANSI_COLOR_MAGENTA L"\x1b[35m"
+#define ANSI_COLOR_CYAN L"\x1b[36m"
+#define ANSI_COLOR_RESET L"\x1b[0m"
+#define DEFAULT_COLOR L""
+
+typedef char           cx_char;
+typedef cx_char       *cx_str;
+typedef cx_char const *cx_cstr;
 
 void cx_print_init(void);
 void cx_print(FILE *stream, wchar_t const *fmt, ...);
 void cx_print_board(cx_board_t const *board);
 void cx_print_bin(uint64_t n);
 void cx_print_bitboard(cx_bitboard_t n);
-
-void cx_log(char const *msg, cx_log_type_t type);
-void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...);
 
 #endif  // CHEX_PRINT_H
