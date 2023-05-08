@@ -30,26 +30,19 @@
 
 typedef uint64_t cx_move_t;
 
-// clang-format off
-#define CX_MOVE_FROM                                          0b111111
-#define CX_MOVE_TO                                      0b111111000000
-#define CX_MOVE_PIECE_TYPE                          0b1111000000000000
-#define CX_MOVE_PROMOTION_PIECE_TYPE            0b11110000000000000000
-#define CX_MOVE_CAPTURE                     0b100000000000000000000000
-#define CX_MOVE_EN_PASSANT            0b100000000000000000000000000000
-#define CX_MOVE_CASTLE              0b11000000000000000000000000000000
-#define CX_MOVE_CHECK              0b100000000000000000000000000000000
-#define CX_MOVE_CHECKMATE         0b1000000000000000000000000000000000
-#define CX_MOVE_STALEMATE        0b10000000000000000000000000000000000
-#define CX_MOVE_EP_SQUARE  0b11111100000000000000000000000000000000000
-// clang-format on
-
-
-enum MoveFlags {
-    CX_MOVE_FLAG_PROMOTION = 1 << 0,
-    CX_MOVE_FLAG_EN_PASSANT = 1 << 1,
-    CX_MOVE_FLAG_CASTLE = 1 << 2,
-    CX_MOVE_FLAG_CAPTURE = 1 << 3,
+enum CxMove {
+    CX_MOVE_NULL                 = 0,
+    CX_MOVE_FROM                 = 0b0000000000000000000000000000000000111111,
+    CX_MOVE_TO                   = 0b0000000000000000000000000000111111000000,
+    CX_MOVE_PIECE_TYPE           = 0b1111000000000000,
+    CX_MOVE_PROMOTION_PIECE_TYPE = 0b11110000000000000000,
+    CX_MOVE_CAPTURE              = 0b100000000000000000000000,
+    CX_MOVE_EN_PASSANT           = 0b100000000000000000000000000000,
+    CX_MOVE_CASTLE               = 0b11000000000000000000000000000000,
+    CX_MOVE_CHECK                = 0b100000000000000000000000000000000,
+    CX_MOVE_CHECKMATE            = 0b1000000000000000000000000000000000,
+    CX_MOVE_STALEMATE            = 0b10000000000000000000000000000000000,
+    CX_MOVE_EP_SQUARE            = 0b11111100000000000000000000000000000000000,
 };
 
 void cx_move_init(void);
@@ -64,7 +57,7 @@ size_t cx_move_gen_legal(cx_board_t *board, cx_move_t *moves);
 size_t cx_move_gen_pseudo_legal(cx_board_t *board, cx_move_t *moves);
 
 // Move parsing.
-cx_move_t cx_move_from_str(char const *str);
-char *cx_move_to_str(cx_move_t move);
+cx_move_t cx_move_parse(const cx_board_t * board, char const *san_str);
+char     *cx_move_str(const cx_board_t * board, cx_move_t move);
 
-#endif//CHEX_MOVE_H
+#endif  // CHEX_MOVE_H
