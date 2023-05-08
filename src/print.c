@@ -42,8 +42,6 @@ void cx_print(FILE *stream, wchar_t const *fmt, ...) {
 }
 
 void cx_print_board(cx_board_t const *board) {
-    cx_log("Board:", CX_LOG_INFO);
-
     wchar_t buffer[8][9] = {0};
 
     // Iterate over the bitboards.
@@ -51,8 +49,6 @@ void cx_print_board(cx_board_t const *board) {
         cx_bitboard_t bb = board->pieces[i];
         // Print pieces to buffer using PIECE_SYMBOLS starting with msb
         for (size_t j = 0; j < CX_BOARD_SQUARE_CNT; ++j) {
-            if (j % 8 == 0)
-                wprintf(L"\n");
             if (bb >> (63 - j) & 1)
                 buffer[j / 8][j % 8] = PIECE_SYMBOLS[i];
         }

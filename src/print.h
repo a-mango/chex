@@ -5,6 +5,7 @@
 #ifndef CHEX_PRINT_H
 #define CHEX_PRINT_H
 
+#include <stdio.h>
 #include <wchar.h>
 
 #include "board.h"
