@@ -3,6 +3,7 @@
 //
 #include "board.h"
 
+#include <inttypes.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +11,9 @@
 
 #include "util.h"
 
-static const char *FEN_PIECES = " pnbrqkPNBRQK";
-static const char *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const char *START_POS  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const char *EMPTY_POS = "8/8/8/8/8/8/8/8 w - - 0 1";
+static const char *FEN_PIECES = " PNBRQKpnbrqk";
 
 cx_board_t *cx_board_init(void) {
     cx_board_t *board = calloc(1, sizeof(cx_board_t));
@@ -20,7 +22,7 @@ cx_board_t *cx_board_init(void) {
         exit(EXIT_FAILURE);
     }
 
-    cx_log("Initializing board", CX_LOG_INFO);
+    cx_log_va(L"%s: initialized board at address %p", CX_LOG_DEBUG, __func__, (void*)board);
     cx_board_fen_load(board, START_POS);
 
     return board;
@@ -52,7 +54,12 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     assert(board != NULL);
     assert(fen != NULL);
 
-    cx_log("Board FEN import", CX_LOG_INFO);
+    cx_log_va(L"%s: import fen string", CX_LOG_DEBUG, __func__);
+
+    // Reset bitboards
+    for (size_t i = 0; i < 16; i++) {
+        board->pieces[i] = 0;
+    }
 
     // Split the FEN string into its component parts
     char fen_copy[strlen(fen) + 1]; // FIXME: use malloc or fixed size buffer
@@ -81,6 +88,7 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
             // Place the piece on the board
             int    index       = rank * 8 + file;
             size_t board_index = (size_t)(strchr(FEN_PIECES, *c) - FEN_PIECES);
+            cx_log_va(L"%s: piece: %c pos: %d bb: %zu",CX_LOG_DEBUG , __func__, *c, index, board_index);
             board->pieces[board_index] |= CX_BIT << index;
             ++file;
         }
@@ -110,6 +118,8 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     board->halfmove_clock = (uint8_t)atoi(parts[4]);
     // Parse the fullmove number section of the FEN string.
     board->fullmove_number = (uint8_t)atoi(parts[5]);
+
+    cx_log_va(L"%s: loaded position %s",CX_LOG_DEBUG , __func__, fen);
 
     return 0;
 }

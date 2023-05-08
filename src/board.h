@@ -11,9 +11,10 @@
 
 #define CX_BOARD_SIZE 8
 #define CX_BOARD_WIDTH 8
-#define CX_BOARD_SQUARE_CNT 120
+#define CX_BOARD_SQUARE_CNT 64
 
 #define CX_BIT 1ULL
+#define CX_SET_BIT(n, pos) (n |= CX_BIT << pos)
 
 typedef uint64_t cx_piece_t;
 typedef uint64_t cx_bitboard_t;
@@ -92,6 +93,9 @@ enum {
 
 #define CX_PIECE_COLOR(piece) ((piece) & (CX_WHITE | CX_BLACK))
 #define CX_PIECE_TYPE(piece) ((piece) & (CX_PAWN | CX_KNIGHT | CX_BISHOP | CX_ROOK | CX_QUEEN | CX_KING))
+
+extern const char *START_POS;
+extern const char *EMPTY_POS;
 
 // Functions.
 cx_board_t *cx_board_init(void);
