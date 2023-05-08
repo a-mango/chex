@@ -3,12 +3,10 @@
 
 #include "print.h"
 
-static const wchar_t *CX_LOG_HEADERS[] = {
-    L"[" ANSI_COLOR_CYAN "INFO" ANSI_COLOR_RESET "]   ",
-    L"[" ANSI_COLOR_MAGENTA "WARN" ANSI_COLOR_RESET "]   ",
-    L"[" ANSI_COLOR_RED "ERROR" ANSI_COLOR_RESET "]  ",
-    L"[" ANSI_COLOR_YELLOW "DEBUG" ANSI_COLOR_RESET "]  ",
-};
+
+#define CX_LOG_STREAM CX_DEFAULT_STREAM
+
+extern cx_cstr CX_LOG_HEADERS[];
 
 typedef enum LogType {
     CX_LOG_INFO,
@@ -16,9 +14,9 @@ typedef enum LogType {
     CX_LOG_ERROR,
     CX_LOG_DEBUG,
     CX_LOG_FATAL,
-} cx_log_type_t;
+} cx_log_t;
 
-void cx_log(char const *msg, cx_log_type_t type);
-void cx_log_va(wchar_t const *msg, cx_log_type_t type, ...);
+void cx_log(cx_cstr msg, cx_log_t type);
+void cx_log_va(cx_cstr fmt, cx_log_t type, ...);
 
 #endif  // CHEX_LOG_H

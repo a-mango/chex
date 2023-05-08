@@ -1,7 +1,6 @@
 #include "print.h"
 
 #include <locale.h>
-#include <stdarg.h>
 #include <stdio.h>
 
 #include "util.h"
@@ -13,14 +12,18 @@ static const wchar_t *RANK_SYMBOLS  = L"12345678";
 
 void cx_print_init(void) {
     setlocale(LC_ALL, "en_US.UTF-8");
-    cx_print(DEFAULT_STREAM, DEFAULT_COLOR);
+    cx_print(CX_DEFAULT_STREAM, DEFAULT_COLOR);
 }
 
 void cx_print(FILE *stream, wchar_t const *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    vfwprintf(stream, fmt, args);
+    cx_print_va(stream, fmt, args);
     va_end(args);
+}
+
+void cx_print_va(FILE *stream, wchar_t const *fmt, va_list args) {
+    vfwprintf(stream, fmt, args);
 }
 
 void cx_print_board(cx_board_t const *board) {
@@ -36,7 +39,7 @@ void cx_print_board(cx_board_t const *board) {
         }
     }
     for (size_t i = 0; i < CX_BOARD_SIZE; ++i)
-        wprintf(L"%ls\n", buffer[i]);  // Don't forget to reverse the buffer
+        wprintf(L"%ls\n", buffer[i]);
 }
 
 void cx_print_bin(cx_piece_t n) {
