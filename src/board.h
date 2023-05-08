@@ -12,17 +12,23 @@
 #define CX_BOARD_SIZE 8
 #define CX_BOARD_WIDTH 8
 #define CX_BOARD_SQUARE_CNT 64
+#define CX_BOARD_SQUARE_NULL 0xFF
+
+#define CX_BOARD_BITBOARD_CNT 16
 
 #define CX_BIT 1ULL
 #define CX_SET_BIT(n, pos) (n |= CX_BIT << pos)
 
+typedef uint8_t  cx_square_t;
 typedef uint64_t cx_piece_t;
 typedef uint64_t cx_bitboard_t;
 
 typedef struct {
+    uint_fast64_t hash;
+
+    uint8_t  en_passant;
     uint8_t  active_color;
     uint16_t castle_rights;
-    uint8_t  en_passant;
     uint8_t  halfmove_clock;
     uint8_t  fullmove_number;
 
@@ -105,6 +111,6 @@ cx_piece_t  cx_board_get_piece(cx_board_t const *board, uint8_t square);
 void        cx_board_set_piece(cx_board_t *board, uint8_t square, cx_piece_t piece);
 ssize_t     cx_board_fen_load(cx_board_t *board, char const *fen);
 char       *cx_board_fen(cx_board_t const *board);
-
+void        cx_board_update_bitboards(cx_board_t *board);
 
 #endif  // CHEX_BOARD_H

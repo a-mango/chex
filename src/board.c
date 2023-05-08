@@ -18,7 +18,7 @@ const char *FEN_PIECES = " PNBRQKpnbrqk";
 cx_board_t *cx_board_init(void) {
     cx_board_t *board = calloc(1, sizeof(cx_board_t));
     if (board == NULL) {
-        cx_log("calloc failed", CX_LOG_ERROR);
+        cx_log(L"calloc failed", CX_LOG_ERROR);
         exit(EXIT_FAILURE);
     }
 
@@ -57,6 +57,7 @@ void cx_board_set_piece(cx_board_t *board, uint8_t square, cx_piece_t piece) {
     cx_bitboard_t mask        = CX_BIT << square;
     cx_piece_t    board_index = (piece & 0b111) + (piece & 0b1000 ? 0 : 6);
     board->pieces[board_index] |= mask;
+    cx_board_update_bitboards(board);
 }
 
 ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
@@ -64,7 +65,7 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     assert(board != NULL);
     assert(fen != NULL);
 
-    cx_log_va(L"%s: import fen string", CX_LOG_DEBUG, __func__);
+    cx_log_va(L"%s: loading fen %s", CX_LOG_DEBUG, __func__, fen);
 
     // Reset bitboards
     for (size_t i = 0; i < 16; i++) {
@@ -98,17 +99,14 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
             // Place the piece on the board
             int    index       = rank * 8 + 7 - file;
             size_t board_index = (size_t)(strchr(FEN_PIECES, *c) - FEN_PIECES);
-            cx_log_va(L"%s: piece: %c pos: %d bb: %zu", CX_LOG_DEBUG, __func__, *c, index, board_index);
+            cx_log_va(L"%s: piece: %c pos: %d bb: %zu", CX_LOG_DEBUG, __func__, (cx_char)*c, index, board_index);
             board->pieces[board_index] |= CX_BIT << index;
             ++file;
         }
     }
 
     // Update the aggregate bitboards.
-    board->pieces[CX_BB_EMPTY] = CX_EMPTY_SQUARES(board);
-    board->pieces[CX_BB_WHITE] = CX_WHITE_PIECES(board);
-    board->pieces[CX_BB_BLACK] = CX_BLACK_PIECES(board);
-    board->pieces[CX_BB_ALL]   = CX_ALL_PIECES(board);
+    cx_board_update_bitboards(board);
 
     // Parse the active color section of the FEN string.
     board->active_color = (parts[1][0] == 'w') ? CX_WHITE : CX_BLACK;
@@ -129,13 +127,13 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
     // Parse the fullmove number section of the FEN string.
     board->fullmove_number = (uint8_t)atoi(parts[5]);
 
-    cx_log_va(L"%s: loaded position %s", CX_LOG_DEBUG, __func__, fen);
+    cx_log_va(L"%s: position loaded", CX_LOG_DEBUG, __func__);
 
     return 0;
 }
 
 char *cx_board_fen(cx_board_t const *board) {
-    cx_log("Board FEN", CX_LOG_INFO);
+    cx_log(L"board fen", CX_LOG_INFO);
     // Export the board into a FEN string.
     assert(board != NULL);
 
@@ -189,4 +187,15 @@ char *cx_board_fen(cx_board_t const *board) {
     sprintf(c, "%d %d", board->halfmove_clock, board->fullmove_number);
 
     return p;
+}
+
+void cx_board_update_bitboards(cx_board_t *board) {
+    assert(board != NULL);
+    cx_log_va(L"%s: update board aggregates", CX_LOG_DEBUG, __func__);
+
+    // Update the aggregate bitboards.
+    board->pieces[CX_BB_EMPTY] = CX_EMPTY_SQUARES(board);
+    board->pieces[CX_BB_WHITE] = CX_WHITE_PIECES(board);
+    board->pieces[CX_BB_BLACK] = CX_BLACK_PIECES(board);
+    board->pieces[CX_BB_ALL]   = CX_ALL_PIECES(board);
 }
