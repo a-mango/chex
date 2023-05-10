@@ -100,9 +100,9 @@ cx_move_t cx_move_parse(const cx_board_t *board, char const *san_str) {
         // from piece found, use fen_pieces to find piece
     } else {
         // use fen_files and fen_ranks to find from square / piece
-        size_t file = (size_t)(wcschr(FILE_SYMBOLS, san_str[0]) - FILE_SYMBOLS);
-        size_t rank = (size_t)(wcschr(RANK_SYMBOLS, san_str[1]) - RANK_SYMBOLS);
-        cx_square_t from = CX_BOARD_SQUARE(file, rank);
+        cx_square_t file = (cx_square_t)(wcschr(FILE_SYMBOLS, san_str[0]) - FILE_SYMBOLS);
+        cx_square_t rank = (cx_square_t)(wcschr(RANK_SYMBOLS, san_str[1]) - RANK_SYMBOLS);
+        cx_square_t from = CX_BOARD_SQUARE(rank, file);
         move |= CX_MOVE_FROM & from;
         piece = cx_board_get_piece(board, from);
         move |= CX_MOVE_PIECE & (piece << 14);
@@ -116,7 +116,7 @@ cx_move_t cx_move_parse(const cx_board_t *board, char const *san_str) {
     // To parsing
     size_t file = (size_t)(wcschr(FILE_SYMBOLS, san_str[2]) - FILE_SYMBOLS);
     size_t rank = (size_t)(wcschr(RANK_SYMBOLS, san_str[3]) - RANK_SYMBOLS);
-    move |= CX_MOVE_TO & (CX_BOARD_SQUARE(file, rank) << 7);
+    move |= CX_MOVE_TO & (CX_BOARD_SQUARE(rank, file) << 7);
 
     // TODO: handle promotion, castling perm and en passant
 
