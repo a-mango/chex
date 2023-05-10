@@ -45,8 +45,8 @@ endif ()
 # Find source files
 file(GLOB_RECURSE SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/src/*.c
-	${CMAKE_SOURCE_DIR}/src/*.cpp)
-list(REMOVE_ITEM SOURCE_FILES "src/chex.c")
+	/src/*.cpp)
+list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/chex.c)
 
 # Find header files
 file(GLOB_RECURSE HEADER_FILES
