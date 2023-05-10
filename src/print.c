@@ -59,3 +59,13 @@ void cx_print_bitboard(cx_bitboard_t n) {
     }
     wprintf(L"\n");
 }
+
+void cx_print_sqnum(void) {
+    for (cx_square_t rank = 0; rank < CX_BOARD_SIZE; ++rank) {
+        for(cx_square_t file = 0; file < CX_BOARD_SIZE; ++file) {
+            cx_square_t square = CX_BOARD_SQUARE(CX_BOARD_SIZE - rank - 1, file);
+            cx_print(CX_DEFAULT_STREAM, L"%3d", square);
+        }
+        cx_print(CX_DEFAULT_STREAM, L"\n");
+    }
+}

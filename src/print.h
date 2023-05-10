@@ -16,6 +16,8 @@
 #define CX_PRISTR "s"
 #define CX_PRIWSTR "ls"
 #define CX_PRIWCHAR "lc"
+#define CX_PRIWINT "ld"
+#define CX_PRISQ PRIu8
 
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN L"\x1b[32m"
@@ -40,5 +42,6 @@ void cx_print_va(FILE *stream, wchar_t const *fmt, va_list args);
 void cx_print_board(cx_board_t const *board);
 void cx_print_bin(uint64_t n);
 void cx_print_bitboard(cx_bitboard_t n);
+void cx_print_sqnum(void);
 
 #endif  // CHEX_PRINT_H

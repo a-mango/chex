@@ -26,7 +26,7 @@ int main(void) {
     cx_board_t *board = cx_board_init();
 //    cx_board_fen_load(board, "r7/8/8/8/8/8/7/7R w - - 0 1");
     cx_print_board(board);
-
+    cx_print_sqnum();
     cx_board_free(board);
     return 0;
 }
