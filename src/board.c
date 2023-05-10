@@ -97,10 +97,10 @@ ssize_t cx_board_fen_load(cx_board_t *board, char const *fen) {
             file += *c - '0';
         } else {
             // Place the piece on the board
-            int    index       = rank * 8 + 7 - file;
-            size_t board_index = (size_t)(strchr(FEN_PIECES, *c) - FEN_PIECES);
-            cx_log_va(L"%s: piece: %c pos: %d bb: %zu", CX_LOG_DEBUG, __func__, (cx_char)*c, index, board_index);
-            board->pieces[board_index] |= CX_BIT << index;
+            int    index       = CX_BOARD_SQUARE(rank, CX_BOARD_SIZE - file - 1);
+            size_t bb_index    = (size_t)(strchr(FEN_PIECES, *c) - FEN_PIECES);
+            cx_log_va(L"%s: piece: %c pos: %d bb: %zu", CX_LOG_DEBUG, __func__, (cx_char)*c, index, bb_index);
+            board->pieces[bb_index] |= CX_BIT << index;  // use set_piece
             ++file;
         }
     }
@@ -140,10 +140,10 @@ char *cx_board_fen(cx_board_t const *board) {
     // Dump the piece placement section of the FEN string.
     char *c = calloc(120, sizeof(char));
     char *p = c;
-    for (int rank = 7; rank >= 0; --rank) {
+    for (ssize_t rank = 7; rank >= 0; --rank) {
         int empty_squares = 0;
-        for (int file = 7; file >= 0; --file) {
-            cx_piece_t piece = cx_board_get_piece(board, (uint8_t)(rank * 8 + file));
+        for (ssize_t file = 7; file >= 0; --file) {
+            cx_piece_t piece = cx_board_get_piece(board, CX_BOARD_SQUARE(rank, file));
             if (piece == CX_EMPTY) {
                 empty_squares++;
             } else {

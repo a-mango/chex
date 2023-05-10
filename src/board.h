@@ -14,7 +14,7 @@
 #define CX_BOARD_SQUARE_CNT 64
 #define CX_BOARD_SQUARE_NULL 0xFF
 // Board squares are counted from bottom right to top left.
-#define CX_BOARD_SQUARE(file, rank) (CX_BOARD_WIDTH - (file) - 1 + (rank) * CX_BOARD_WIDTH)
+#define CX_BOARD_SQUARE(rank, file) (cx_square_t)((rank) * CX_BOARD_WIDTH + (file))
 #define CX_BOARD_PIECE_CNT 32
 
 #define CX_BOARD_BITBOARD_CNT 16
