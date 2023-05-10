@@ -1,0 +1,74 @@
+CHEX CHESS MANUAL
+
+1       TODO
+
+[ ]     Add command line argument support
+[ ]     Add error handling
+[ ]     Extend debug logging functionalities
+[ ]     Fix board representation
+[x]     Add a board printer
+[ ]     Fix move parser
+[ ]     Add a move generator
+[ ]     Add a move validator
+[ ]     Add a move maker
+[ ]     Implement search
+[ ]     Implement eval
+[ ]     Add REPL
+[ ]     Implement UCI
+
+
+2       DESIGN CONSIDERATIONS
+
+2.1     BOARD REPRESENTATION
+
+This program uses bitboards to represent the board.  A bitboard is a 64-bit
+integer, with each bit representing a square on the board.  The least significant
+bit represents a8, the next bit represents b8, and so on.  The most significant
+bit represents h1.  The bitboard for a square is TODO.
+
+Diagram :
+
+    8   7   6   5   4   3   2   1
+  +---+---+---+---+---+---+---+---+
+8 | 56| 57| 58| 59| 60| 61| 62| 63|
+  +---+---+---+---+---+---+---+---+
+7 | 48| 49| 50| 51| 52| 53| 54| 55|
+  +---+---+---+---+---+---+---+---+
+6 | 40| 41| 42| 43| 44| 45| 46| 47|
+  +---+---+---+---+---+---+---+---+
+5 | 32| 33| 34| 35| 36| 37| 38| 39|
+  +---+---+---+---+---+---+---+---+
+4 | 24| 25| 26| 27| 28| 29| 30| 31|
+  +---+---+---+---+---+---+---+---+
+3 | 16| 17| 18| 19| 20| 21| 22| 23|
+  +---+---+---+---+---+---+---+---+
+2 |  8|  9| 10| 11| 12| 13| 14| 15|
+  +---+---+---+---+---+---+---+---+
+1 |  0|  1|  2|  3|  4|  5|  6|  7|
+
+
+Compass rose:
+
+noWe        nort        noEa
+      +7    +8    +9
+          \  |  /
+west  -1 <-  0 -> +1    east
+          /  |  \
+      -9    -8    -7
+soWe        sout        soEa
+
+See also:
+- https://www.chessprogramming.org/Square_Mapping_Considerations
+
+
+2.2     BITBOARD OPERATIONS
+
+2.2     MOVE REPRESENTATION
+
+2.3     MOVE GENERATION
+
+3       USAGE
+
+4       TESTING
+
+5       REFERENCES
